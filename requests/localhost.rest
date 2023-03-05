@@ -7,6 +7,6 @@ content-type: application/json
 {
   "title": "Hello World",
   "author": "Jesse Gill",
-  "url": "http://hello-world",
-  "likes": 10000000
+  "url": "http://hello-world"
+
 }

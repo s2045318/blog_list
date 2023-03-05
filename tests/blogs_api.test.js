@@ -30,7 +30,6 @@ test('all notes are returned', async () => {
 
 test('unique identifier property of the blog posts is named id', async () => {
     const response = await api.get('/api/blogs')
-    console.log(response.body)
     expect(response.body[0].id).toBeDefined()  
   })
 
@@ -43,12 +42,27 @@ test('HTTP POST request to the /api/blogs' , async() => {
           
     }
     let blogObject = new Blog(blog)
-    const responsePost = await blogObject.save()
+    await blogObject.save()
    // expect(responsePost.body).toBe(blog)
     const responseGet = await api.get('/api/blogs')
     expect(responseGet.body).toHaveLength(helper.initialBlogs.length + 1)
 
 })
+
+test('likes property is missing from the request, it will default to the value 0', async () => {
+    const blog = {
+      "title": "Hello World",
+      "author": "Jesse Gill",
+      "url": "http://hello-world"
+    }
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+    const response = await api.get('/api/blogs')
+    console.log(response.body)
+    expect(response.status).toBe(200)
+    expect(response.body[response.body.length - 1].likes).toBe(0)
+  })
+  
 
 afterAll(async () => {
   await mongoose.connection.close()
