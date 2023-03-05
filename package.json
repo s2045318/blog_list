@@ -44,6 +44,7 @@
     "jest": "^27.5.1"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globalTeardown": "./tests/teardown.js"
   }
 }
