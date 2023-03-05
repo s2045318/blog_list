@@ -21,7 +21,7 @@ test('blogs are returned as json', async () => {
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
-},100000)
+})
 
 test('all notes are returned', async () => {
     const response = await api.get('/api/blogs')
@@ -34,6 +34,21 @@ test('unique identifier property of the blog posts is named id', async () => {
     expect(response.body[0].id).toBeDefined()  
   })
 
+test('HTTP POST request to the /api/blogs' , async() => {
+    const blog = {
+        "title": "Hello World",
+        "author": "Jesse Gill",
+        "url": "http://hello-world",
+        "likes": 10000000
+          
+    }
+    let blogObject = new Blog(blog)
+    const responsePost = await blogObject.save()
+   // expect(responsePost.body).toBe(blog)
+    const responseGet = await api.get('/api/blogs')
+    expect(responseGet.body).toHaveLength(helper.initialBlogs.length + 1)
+
+})
 
 afterAll(async () => {
   await mongoose.connection.close()
