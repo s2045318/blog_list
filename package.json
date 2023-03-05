@@ -17,9 +17,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "build": "react-scripts build",
-    "test": "jest --verbose",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,7 +42,9 @@
     ]
   },
   "devDependencies": {
-    "jest": "^27.5.1"
+    "cross-env": "^7.0.3",
+    "jest": "^27.5.1",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node",
