@@ -5,11 +5,12 @@ test('dummy returns one', () => {
 
   const result = listHelper.dummy(blogs)
   expect(result).toBe(1)
+
 })
 
 
-describe('total likes', () => {
-    const listWithOneBlog = [
+describe('total likes',  () => {
+    const blogList = [
       {
         _id: '5a422aa71b54a676234d17f8',
         title: 'Go To Statement Considered Harmful',
@@ -17,11 +18,69 @@ describe('total likes', () => {
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 5,
         __v: 0
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Wayward Winds',
+        author: 'Hans A Rudolf',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Moving South',
+        author: 'Zomm By Uurigi',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 10,
+        __v: 0
       }
     ]
   
     test('when list has only one blog, equals the likes of that', () => {
-      const result = listHelper.totalLikes(listWithOneBlog)
-      expect(result).toBe(5)
+      const result = listHelper.totalLikes(blogList)
+      expect(result).toBe(20)
     })
   })
+
+
+
+describe('favorite blog', () => {
+    const blogList = [
+        {
+          _id: '5a422aa71b54a676234d17f8',
+          title: 'Go To Statement Considered Harmful',
+          author: 'Edsger W. Dijkstra',
+          url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+          likes: 5,
+          __v: 0
+        },
+        {
+          _id: '5a422aa71b54a676234d17f8',
+          title: 'Wayward Winds',
+          author: 'Hans A Rudolf',
+          url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+          likes: 10,
+          __v: 0
+        },
+        {
+          _id: '5a422aa71b54a676234d17f8',
+          title: 'Moving South',
+          author: 'Zomm By Uurigi',
+          url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+          likes: 5,
+          __v: 0
+        }
+      ]
+
+    test('favorite blog is the one with the most likes' , () => {
+        const result = listHelper.favoriteBlog(blogList)
+        expect(result).toBe(JSON.stringify({
+            title:'Wayward Winds',
+            author: 'Hans A Rudolf',
+            likes : 10
+        }))
+
+    }
+    )
+})
