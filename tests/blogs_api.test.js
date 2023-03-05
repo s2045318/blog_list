@@ -58,12 +58,27 @@ test('likes property is missing from the request, it will default to the value 0
     let blogObject = new Blog(blog)
     await blogObject.save()
     const response = await api.get('/api/blogs')
-    console.log(response.body)
     expect(response.status).toBe(200)
     expect(response.body[response.body.length - 1].likes).toBe(0)
   })
   
 
+test('a blog post can be deleted', async () => {
+    const blogsAtStart = await helper.blogsInDB()
+    const blogToDelete = blogsAtStart[0]
+    console.log(blogsAtStart)
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDB()
+    console.log(blogsAtEnd)
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    const contents = blogsAtEnd.map(r => r.title)
+
+    expect(contents).not.toContain(blogToDelete.content)
+})
 afterAll(async () => {
   await mongoose.connection.close()
 })

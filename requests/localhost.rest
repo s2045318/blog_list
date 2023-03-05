@@ -10,3 +10,6 @@ content-type: application/json
   "url": "http://hello-world"
 
 }
+
+###
+DELETE http://localhost:3003/api/blogs/The%20Alchemist
