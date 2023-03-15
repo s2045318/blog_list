@@ -12,4 +12,23 @@ content-type: application/json
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/The%20Alchemist
+DELETE http://localhost:3003/api/blogs/6411b402c3b4997c134a7364
+
+###
+PUT http://localhost:3003/api/blogs/6411aba1246b2013c167a151
+Content-Type: application/json
+
+{
+  "title": "The Alchemist",
+  "author": "Paulo Coelho",
+  "url": "https://www.adlibris.com/fi/kirja/the-alchemist-25th-anniversary-edition-9780062355300?gclid=CjwKCAiAmJGgBhAZEiwA1JZolg1JEgl8Fe8Av2KnWu01T3qiwQbpe-hUJmiJLOU55Zr4F7AV8eTT1xoCf6cQAvD_BwE",
+  "likes": 100,
+  "id": "6411aba1246b2013c167a151"
+}
+###
+PUT http://localhost:3003/api/blogs/6411b0246fb75c737588c89a
+Content-Type: application/json
+
+{
+    "likes": 100
+}

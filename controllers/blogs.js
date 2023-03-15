@@ -28,7 +28,7 @@ blogRouter.post('/', (request, response, next) => {
     })
 
 
-blogRouter.delete('/:id', async (request, response, next) => {
+blogRouter.delete('/:id', async (request, response) => {
   try {
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
@@ -38,21 +38,28 @@ blogRouter.delete('/:id', async (request, response, next) => {
 })
 
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', async (request, response, next) => {
   try {
-    const body = request.body
-
-    const blog = {
-      title: body.title,
-      author: body.author,
-      likes : body.likes,
-      url : body.url 
+    const updatedBlog = {
+      title: request.body.title,
+      author: request.body.author,
+      url: request.body.url,
+      likes: request.body.likes
     }
-    console.log('about to find and update')
-    await Blog.findByIdAndUpdate(body.id, blog, { new: true })
-    response.status(200)
-  } catch(exception) {
-      response.status(400)
+    
+    const result = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, { new: true })
+    if (result) {
+      response.json(result)
+    } else {
+      response.status(404).end()
+    }
+  } catch (exception) {
+    next(exception)
   }
 })
+
+
+
+
+
 module.exports = blogRouter
