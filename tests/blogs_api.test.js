@@ -66,13 +66,13 @@ test('likes property is missing from the request, it will default to the value 0
 test('a blog post can be deleted', async () => {
     const blogsAtStart = await helper.blogsInDB()
     const blogToDelete = blogsAtStart[0]
-    console.log(blogsAtStart)
+
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)
 
     const blogsAtEnd = await helper.blogsInDB()
-    console.log(blogsAtEnd)
+
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
     const contents = blogsAtEnd.map(r => r.title)
