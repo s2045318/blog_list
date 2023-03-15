@@ -40,3 +40,32 @@ describe('when there is initially one user in db', () => {
     expect(usernames).toContain(newUser.username)
   })
 })
+
+test('length of username', async () => {
+        const newUser = {
+            username: 'TS',
+            name : 'Rikka',
+            password : 'Shouldnt matter'
+        }
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+})
+
+test('length of password', async () => {
+    const newUser = {
+        username: 'testingtestingonetwo',
+        name : 'Mikki G',
+        password : 'SM'
+    }
+    await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+})
+
+
+afterAll(async () => {
+    await mongoose.connection.close()
+})

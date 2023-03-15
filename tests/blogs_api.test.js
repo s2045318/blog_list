@@ -103,6 +103,8 @@ test('updating a blog post', async () => {
   expect(updatedPost.url).toEqual(updatedBlog.url)
   expect(updatedPost.likes).toEqual(updatedBlog.likes)
 })
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
