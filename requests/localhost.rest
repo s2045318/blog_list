@@ -1,6 +1,10 @@
 GET http://localhost:3003/api/blogs
 
 ###
+GET http://localhost:3003/api/users
+
+###
+
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
 
@@ -34,11 +38,30 @@ Content-Type: application/json
 }
 
 ###
-post http://localhost:3003/api/users
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "name" : "Maytor",
-  "username" : "wh",
+  "username" : "Maytor",
+  "name" : "wh",
+  "password" : ""
+}
+
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username" : "mluukkai",
+  "password" : "salainen"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username" : "wheatyBiscuits",
   "password" : "milk&sugar"
 }

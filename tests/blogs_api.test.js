@@ -84,9 +84,9 @@ test('updating a blog post', async () => {
   const blogs = await helper.blogsInDB()
   const blogToUpdate = blogs[0]
   const updatedBlog = {
-    title: 'Updated title',
-    author: 'Updated author',
-    url: 'http://updated-url.com',
+    title: blogToUpdate.title,
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
     likes: 100
   }
 

@@ -4,30 +4,37 @@ const User = require('../models/user')
 
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
+  
   if (username.length < 3) {
-    console.log('username is less then 3 characters long')
-    response.status(400)
-    response.send()
-  } else if (password.length< 3) {
-    console.log('password is less then 3 characters long')
-    response.status(400)
-    response.send()
-  } else {
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-
-    const user = new User({
-      username,
-      name,
-      passwordHash,
-    })
-
-    const savedUser = await user.save()
-
-    response.status(201).json(savedUser)
-    console.log('saved user:', username)
-    response.send()
+    return response.status(400).json({ error: 'Username must be at least 3 characters long' })
   }
+
+  if (password.length < 3) {
+    return response.status(400).json({ error: 'Password must be at least 3 characters long' })
+  }
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  const user = new User({
+    username,
+    name,
+    passwordHash
+  })
+
+  const savedUser = await user.save()
+
+  response.status(201).json(savedUser)
+})
+
+
+
+
+usersRouter.get('/', async (request, response) => {
+  const users = await User
+    .find({}).populate('blogs')
+
+  response.json(users)
 })
 
 module.exports = usersRouter
