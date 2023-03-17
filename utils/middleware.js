@@ -37,9 +37,22 @@ const tokenExtractor = (request, response, next) => {
 }
 
 
+
+const userExtractor = (request,response,next) => {
+  let user = request.get('token')
+  const decodedToken = jwt.verify(user, process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).send({ error: 'token invalid' })
+  } else {
+    request.user = decodedToken.id
+  }
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 }

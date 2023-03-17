@@ -22,7 +22,7 @@ blogRouter.post('/', async (request, response) => {
     return response.status(401).json({ error: 'token invalid' })
   }
 
-  const creator = await User.findById(decodedToken.id)
+  const creator = request.user
   console.log('creator: ', creator)
   const l =  body.likes ? body.likes : 0
   const blog = new Blog({
@@ -45,6 +45,7 @@ blogRouter.post('/', async (request, response) => {
 
 blogRouter.delete('/:id', async (request, response) => {
   try {
+  //  const user = request.user
     const decodedToken = jwt.verify(request.token,process.env.SECRET)
     if (!decodedToken.id) {
       return response.status(401).json({ error: 'token invalid' })
