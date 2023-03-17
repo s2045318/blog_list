@@ -13,6 +13,7 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
+  try {
   const body = request.body
   console.log('secret variable:',process.env.SECRET)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
@@ -36,15 +37,23 @@ blogRouter.post('/', async (request, response) => {
   creator.blogs = creator.blogs.concat(saved_blog.id)
   await creator.save()
   response.status(201).json(blog)
+  } catch (error) {
+    response.status(403).json({error:'incorrect user for this operation'})
+  }
 })
 
 
 blogRouter.delete('/:id', async (request, response) => {
   try {
-    await Blog.findByIdAndRemove(request.params.id)
+    const decodedToken = jwt.verify(request.token,process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+    let res = await Blog.findByIdAndRemove(request.params.id)
+    console.log(res)
     response.status(204).end()
   } catch(exception) {
-    response.statusCode(400).json({error: 'error occured in deletion, check id and try again'})
+    response.status(400).json({error: 'error occured in deletion, check id and try again'})
   }
 })
 
