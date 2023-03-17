@@ -65,3 +65,14 @@ Content-Type: application/json
   "username" : "wheatyBiscuits",
   "password" : "milk&sugar"
 }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW
+
+{
+  "title" : "Green Eggs and Ham",
+  "Author" : "Dr. Seuss",
+  "url": "http://google.com/greeen%eggs"
+}
