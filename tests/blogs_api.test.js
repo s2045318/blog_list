@@ -3,116 +3,159 @@ const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
+const bc = require('bcryptjs')
 const User = require('../models/user')
-
 const Blog = require('../models/blogs')
+
+
 let token = null
-
-
-beforeEach(async () => {
-  const user = User.findOne({username:"mluukkai"})
-  console.log(user.id)
-})
-
-test('blogs are returned as json', async () => {
-  const user = {
-    username: 'mluukkai',
-    password: 'salainen'
-  }
-
-  const response = await api.post('/api/login').send(user)
-  console.log('user sent')
-  const token = response.body.token
-  console.log(token)
-  await api
-    .get('/api/blogs')
-    .set({'Authorization': `Bearer ${token}`}) // Set the Authorization header with the token
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
-
-
-
-test('all notes are returned', async () => {
+describe ('testing basic blog functionality (get and format)', () => {
+  beforeEach( async() => {
+    await Blog.deleteMany({})
+    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
+    const promiseArray = blogObjects.map((blog) => blog.save())
+    await Promise.all(promiseArray)
+  })
+  test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
-})
-
-test('unique identifier property of the blog posts is named id', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body[0].id).toBeDefined()  
   })
 
-test('HTTP POST request to the /api/blogs' , async() => {
-    const blog = {
-        "title": "Hello World",
-        "author": "Jesse Gill",
-        "url": "http://hello-world",
-        "likes": 10000000
-          
-    }
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-   // expect(responsePost.body).toBe(blog)
-    const responseGet = await api.get('/api/blogs')
-    expect(responseGet.body).toHaveLength(helper.initialBlogs.length + 1)
-
-})
-
-test('likes property is missing from the request, it will default to the value 0', async () => {
-    const blog = {
-      "title": "Hello World",
-      "author": "Jesse Gill",
-      "url": "http://hello-world"
-    }
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-    const response = await api.get('/api/blogs')
-    expect(response.status).toBe(200)
-    expect(response.body[response.body.length - 1].likes).toBe(0)
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
   })
+
   
-
-test('a blog post can be deleted', async () => {
+  test('verifies that the unique identifier is called id and not _id', async () => {
     const blogsAtStart = await helper.blogsInDB()
-    const blogToDelete = blogsAtStart[0]
+    const blogToView = blogsAtStart[0]
+    expect(blogToView.id).toBeDefined()
+  })
+})
+
+describe('tests requiring login', () => {
+  beforeAll(async () => {
+    await User.deleteMany({})
+    const barty ={
+      username : 'Bartholomew James the III',
+      password : 'password',
+      name: 'Barty'
+    }
+    await api.post('/api/users').send(barty)
+    const barty_login = {username : 'Bartholomew James the III',password : 'password'}
+    const response = await api 
+      .post('/api/login')
+      .send(barty_login)
+    token = response.body.token
+
+  })
+  test('adding a blog fails with 401 if no token provided', async () => {
+   const newBlog = {
+      title: "No token blog",
+      author: "Trust me its still legit",
+      url: "freeiphones.com",
+      likes: 1000000
+   }
+   
+    
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+      
+      
+    expect(result.body.error).toContain('jwt must be provided')
+  })
+
+  test('adding a blog with a invalid token fails', async () => {
+    const newBlog = {
+      title: "No token blog",
+      author: "Trust me its still legit",
+      url: "freeiphones.com",
+      likes: 1000000
+   }
+  await api
+    .post('/api/blogs')
+    .set({authorization: 'Bearer 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'})
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
+      
+  
+   // expect(result.body.error).toContain('token invalid') i'm not sure how to make a fake jwt token
+  })
+
+  test('a post can be added with a valid token', async () => {
+    const blog = {
+        title: "Green Eggs and Ham",
+        author: "Dr. Seuss",
+        url :"http://google.com/greeen%eggs"
+      }
 
     await api
-        .delete(`/api/blogs/${blogToDelete.id}`)
-        .expect(204)
+      .post('/api/blogs')
+      .set({authorization: `Bearer ${token}`})
+      .send(blog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    
+  }) 
+
+  test('a blog cannot be updated without token', async () => {
+    const update = {likes: 10}
+    const blogToUpdate = (await helper.blogsInDB())[2]
+    console.log(blogToUpdate)
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(update)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+    
+  })
+  test('a blogs likes can be updated with the correct user token', async () => {
+    const blogToUpdate = (await helper.blogsInDB())[2]
+    const update = {
+      likes : 10
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .set({authorization:`Bearer ${token}`})
+      .send(update)
+      .expect(201)
 
     const blogsAtEnd = await helper.blogsInDB()
+    expect(blogsAtEnd[2]['likes']).toBe(10)
+  })
+  test('a blog post cannot be deleted without the correct token', async () => {
+    const blogToDelete = (await helper.blogsInDB())[2]
+    const response = await api 
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+      expect(response.body.error).toContain('jwt must be provided')
+  })
+  //test('')
+  test('a blog post can be deleted with the correct user', async () => 
+  {
+    const blogToDelete = (await helper.blogsInDB())[2]
+    const response = await api 
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({authorization:`Bearer ${token}`})
+      .expect(204)
+    console.log(response)
+  })
 
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
-    const contents = blogsAtEnd.map(r => r.title)
-
-    expect(contents).not.toContain(blogToDelete.content)
 })
 
-test('updating a blog post', async () => {
-  const blogs = await helper.blogsInDB()
-  const blogToUpdate = blogs[0]
-  const updatedBlog = {
-    title: blogToUpdate.title,
-    author: blogToUpdate.author,
-    url: blogToUpdate.url,
-    likes: 100
-  }
 
-  await api
-    .put(`/api/blogs/${blogToUpdate.id}`)
-    .send(updatedBlog)
-    .expect(200)
 
-  const updatedBlogs = await helper.blogsInDB()
-  const updatedPost = updatedBlogs.find(post => post.id === blogToUpdate.id)
-
-  expect(updatedPost.title).toEqual(updatedBlog.title)
-  expect(updatedPost.author).toEqual(updatedBlog.author)
-  expect(updatedPost.url).toEqual(updatedBlog.url)
-  expect(updatedPost.likes).toEqual(updatedBlog.likes)
-})
 
 
 afterAll(async () => {

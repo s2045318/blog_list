@@ -1,10 +1,8 @@
 GET http://localhost:3003/api/blogs
-
 ###
 GET http://localhost:3003/api/users
 
 ###
-
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
 
@@ -31,11 +29,12 @@ Content-Type: application/json
   "id": "6411aba1246b2013c167a151"
 }
 ###
-PUT http://localhost:3003/api/blogs/6411b0246fb75c737588c89a
+PUT http://localhost:3003/api/blogs/6417311c6a168a287bd6a7da
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NDE3MmFlZjViYWI1ZTM2MGMyYWYxZjMiLCJpYXQiOjE2NzkyMzk5MjJ9.SYCLNF4r1oAAd638qTJJad6HMZoDgOBIKmR0_M5xjIw
 Content-Type: application/json
 
 {
-    "likes": 100
+    "likes": 10
 }
 
 ###
@@ -43,9 +42,9 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "username" : "Maytor",
-  "name" : "wh",
-  "password" : ""
+  "username" : "mluukkai",
+  "password" : "salainen",
+  "name" : "matti"
 }
 
 
@@ -68,13 +67,14 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3003/api/blogs
+POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NDE0NzJmM2ZlYTdhOWQwNjJhNDBlYmIiLCJpYXQiOjE2NzkwNjE4NDF9.izivA17CzQnlG7bUJTHJGyWPqKztx4bgPypI1fxrqyo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NDE3MmFlZjViYWI1ZTM2MGMyYWYxZjMiLCJpYXQiOjE2NzkyMzk5MjJ9.SYCLNF4r1oAAd638qTJJad6HMZoDgOBIKmR0_M5xjIw
 
 {
   "title": "Green Eggs and Ham",
   "author": "Dr. Seuss",
   "url": "http://google.com/greeen%eggs"
 }
+
 
