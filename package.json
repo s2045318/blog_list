@@ -22,7 +22,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "build": "react-scripts build",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "test": "cross-env NODE_ENV=test jest --verbose --runTestsByPath",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,6 +50,11 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "globalTeardown": "./tests/teardown.js"
+    "globalTeardown": "./tests/teardown.js",
+    "testMatch": [
+      "**/tests/dummy_test.js",
+      "**/tests/users_api.test.js",
+      "**/tests/blogs_api.test.js"
+    ]
   }
 }

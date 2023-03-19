@@ -5,8 +5,8 @@ const app = require('../app')
 const api = supertest(app)
 const bcrypt = require('bcryptjs')
 const User = require('../models/user')
-
-//...
+//   "**/tests/dummy_test.js",
+    //  "**/tests/users_api.test.js",
 
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
@@ -14,10 +14,8 @@ describe('when there is initially one user in db', () => {
 
     const passwordHash = await bcrypt.hash('sekret', 10)
     const user = new User({ username: 'root', passwordHash })
-
     await user.save()
   })
-
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDB()
 
@@ -38,6 +36,32 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+})
+
+describe('test login',  () => {
+  test('incorrect login', async () => {
+    const user = {
+      username: "hacker",
+      password: "malicious intent"
+    }
+    await api
+      .post('/api/login')
+      .send(user)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  })
+  test('correct login', async () => {
+    const user = {
+      username: 'mluukkai',
+      password: 'salainen'
+    }
+    const token = await api
+                            .post('/api/login')
+                            .send(user)
+                            .expect(200)
+                            .expect('Content-Type', /application\/json/)
+    
   })
 })
 

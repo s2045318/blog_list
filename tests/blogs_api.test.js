@@ -3,25 +3,35 @@ const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
+const User = require('../models/user')
 
 const Blog = require('../models/blogs')
+let token = null
+
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
-
-  let blogObject = new Blog(helper.initialBlogs[0])
-  await blogObject.save()
-
-  blogObject = new Blog(helper.initialBlogs[1])
-  await blogObject.save()
+  const user = User.findOne({username:"mluukkai"})
+  console.log(user.id)
 })
 
 test('blogs are returned as json', async () => {
+  const user = {
+    username: 'mluukkai',
+    password: 'salainen'
+  }
+
+  const response = await api.post('/api/login').send(user)
+  console.log('user sent')
+  const token = response.body.token
+  console.log(token)
   await api
     .get('/api/blogs')
+    .set({'Authorization': `Bearer ${token}`}) // Set the Authorization header with the token
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
+
+
 
 test('all notes are returned', async () => {
     const response = await api.get('/api/blogs')
