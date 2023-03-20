@@ -52,7 +52,9 @@
     "testEnvironment": "node",
     "globalTeardown": "./tests/teardown.js",
     "testMatch": [
-      "**/tests/blogs_api.test.js"
+      "**/tests/users_api.test.js",
+      "**/tests/blogs_api.test.js",
+      "**/tests/dummy_test.test.js"
     ]
   }
 }

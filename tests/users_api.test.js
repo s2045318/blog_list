@@ -56,12 +56,12 @@ describe('test login',  () => {
       username: 'mluukkai',
       password: 'salainen'
     }
-    const token = await api
-                            .post('/api/login')
-                            .send(user)
-                            .expect(200)
-                            .expect('Content-Type', /application\/json/)
-    
+    await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
   })
 })
 

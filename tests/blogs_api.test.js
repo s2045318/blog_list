@@ -140,22 +140,29 @@ describe('tests requiring login', () => {
       .expect('Content-Type', /application\/json/)
       expect(response.body.error).toContain('jwt must be provided')
   })
-  //test('')
+  test('a blog post cannot be deleted with the incorrect user token', async () => {
+    const user = {
+      username : "mluukkai",
+      password : "salainen",
+      name : "matti"
+    }
+    await api.post('/api/users').send(user)
+    const token2 = await api.post('/api/login').send({username:user.username, password:user.password})
+    const blogToDelete = (await helper.blogsInDB())[2]
+    await api 
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({authorization:`Bearer ${token2}`})
+      .expect(401)
+  })
   test('a blog post can be deleted with the correct user', async () => 
   {
     const blogToDelete = (await helper.blogsInDB())[2]
-    const response = await api 
+    await api 
       .delete(`/api/blogs/${blogToDelete.id}`)
       .set({authorization:`Bearer ${token}`})
       .expect(204)
-    console.log(response)
   })
-
-
 })
-
-
-
 
 
 afterAll(async () => {
