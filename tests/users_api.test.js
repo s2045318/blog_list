@@ -21,7 +21,7 @@ describe('when there is initially one user in db', () => {
 
     const newUser = {
       username: 'mluukkai',
-      name: 'Matti Luukkainen',
+      realname: 'Matti Luukkainen',
       password: 'salainen',
     }
 
@@ -43,6 +43,7 @@ describe('test login',  () => {
   test('incorrect login', async () => {
     const user = {
       username: "hacker",
+      realname: 'hacker',
       password: "malicious intent"
     }
     await api
@@ -70,7 +71,7 @@ describe('test login',  () => {
 test('length of username', async () => {
         const newUser = {
             username: 'TS',
-            name : 'Rikka',
+            realname : 'Rikka',
             password : 'Shouldnt matter'
         }
         await api
@@ -82,7 +83,7 @@ test('length of username', async () => {
 test('length of password', async () => {
     const newUser = {
         username: 'testingtestingonetwo',
-        name : 'Mikki G',
+        realname : 'Mikki G',
         password : 'SM'
     }
     await api

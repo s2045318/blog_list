@@ -41,8 +41,8 @@ describe('tests requiring login', () => {
     await User.deleteMany({})
     const barty ={
       username : 'Bartholomew James the III',
-      password : 'password',
-      name: 'Barty'
+      realname: 'Barty',
+      password : 'password'
     }
     await api.post('/api/users').send(barty)
     const barty_login = {username : 'Bartholomew James the III',password : 'password'}
@@ -143,8 +143,8 @@ describe('tests requiring login', () => {
   test('a blog post cannot be deleted with the incorrect user token', async () => {
     const user = {
       username : "mluukkai",
-      password : "salainen",
-      name : "matti"
+      realname: 'Matti Luukkainen',
+      password : "salainen"
     }
     await api.post('/api/users').send(user)
     const token2 = await api.post('/api/login').send({username:user.username, password:user.password})

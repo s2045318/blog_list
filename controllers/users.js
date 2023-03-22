@@ -13,14 +13,14 @@ usersRouter.post('/', async (request, response) => {
     response.status(400)
       .json({error: 'User validation failed: username is already taken'})
   } else {
-      const { username, personName, password } = request.body
-  
+      const {username, realname, password } = request.body
+      console.log(realname)
       const saltRounds = 10
       const passwordHash = await bcrypt.hash(password, saltRounds)
   
       const user = new User({
         username,
-        personName,
+        realname,
         passwordHash
       })
   
