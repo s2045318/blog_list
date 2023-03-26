@@ -79,7 +79,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NDFiMDliNjY1ZjNkN2RmMzhkM2E2MjEiLCJpYXQiOjE2Nzk0OTUxMjJ9.frhu_NFlN1jsu3DWIg9vENmvyKAfMvndWuc3qs5kQIs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndoZWF0eUJpc2N1aXRzIiwiaWQiOiI2NDIwMzNiYjNhMzgwMjY4YzExOTQwZjQiLCJpYXQiOjE2Nzk4MzIwMDJ9.qTYctKaWPXqNw29GHX0fh3GYHzzravgOmnkj499dgC4
 
 {
   "title": "Green Eggs and Ham",

@@ -46,15 +46,20 @@ blogsRouter.post('/', middle.userExtractor, async (request, response) => {
 })
 	
 blogsRouter.delete('/:id', middle.userExtractor, async (request, response, next) => {
-  const user = await User.findById(request.user)
-  if (user === null) return response.status(401).send({error:'upermission denied for deletion'})
-  const userID = user.id.toString()
-  const blogToDelete = await Blog.findById(request.params.id)
-  if (blogToDelete.user.toString() === userID) {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
-  } else {
-    return response.status(401).json({ error: 'Access denied, user does not have permission' })
+  try {
+    const user = await User.findById(request.user)
+    if (user === null) return response.status(401).send({error:'upermission denied for deletion'})
+    const userID = user.id.toString()
+    const blogToDelete = await Blog.findById(request.params.id)
+    if (blogToDelete.user.toString() === userID) {
+      await Blog.findByIdAndRemove(request.params.id)
+      response.status(204).end()
+    } else {
+      return response.status(401).json({ error: 'Access denied, user does not have permission' })
+  }
+  }
+  catch (error) {
+    return response.status(401).json({ error: 'Access denied, user does not have permission'})
   }
 })
 

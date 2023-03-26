@@ -8,7 +8,7 @@ const initialBlogs = [
     title: 'The Alchemist',
     author: 'Paulo Coelho',
     url: 'https://www.adlibris.com/fi/kirja/the-alchemist-25th-anniversary-edition-9780062355300?gclid=CjwKCAiAmJGgBhAZEiwA1JZolg1JEgl8Fe8Av2KnWu01T3qiwQbpe-hUJmiJLOU55Zr4F7AV8eTT1xoCf6cQAvD_BwE',
-    likes: 678,
+    likes: 48,
   },
   {
     title: 'Meditations',
